@@ -2,7 +2,7 @@
   "name": "dexie-batch",
   "version": "0.1.0",
   "description": "Fetch DB entries in batches to improve performance while respecting IPC size constraints",
-  "main": "index.js",
+  "main": "dexie-batch.js",
   "scripts": {
     "format": "prettier --no-semi --single-quote --trailing-comma es5 --write '*.js'",
     "test": "echo \"Error: no test specified\" && exit 1"
