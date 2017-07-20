@@ -1,8 +1,6 @@
-import Dexie from 'dexie'
+const Promise = require('dexie').Promise
 
-const Promise = Dexie.Promise
-
-export default class DexieBatch {
+module.exports = class DexieBatch {
   constructor(opts = { batchSize: 20 }) {
     this.opts = opts
   }
@@ -31,7 +29,7 @@ export default class DexieBatch {
         .then(a => callback(a, i))
       batchPromises.push(batchPromise)
     }
-    return Dexie.Promise.all(batchPromises).then(batches => batches.length)
+    return Promise.all(batchPromises).then(batches => batches.length)
   }
 
   eachBatchSerial(collection, callback) {
