@@ -5,7 +5,7 @@
   "main": "dexie-batch.js",
   "scripts": {
     "format": "prettier --no-semi --single-quote --trailing-comma es5 --write '*.js'",
-    "test": "browserify spec.js | tape-run | tap-spec"
+    "test": "node spec.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -29,10 +29,9 @@
   },
   "devDependencies": {
     "blue-tape": "^1.0.0",
-    "browserify": "^14.4.0",
     "dexie": "^2.0.0-beta.11",
+    "fake-indexeddb": "^2.0.3",
     "prettier": "^1.5.3",
-    "tap-spec": "^4.1.1",
-    "tape-run": "^3.0.0"
+    "tap-spec": "^4.1.1"
   }
 }

@@ -1,3 +1,6 @@
+// Fake IndexedDB in global scope
+require('fake-indexeddb/build/global')
+
 const test = require('blue-tape')
 const Dexie = require('dexie')
 const DexieBatch = require('./dexie-batch')
@@ -32,15 +35,12 @@ function testBasicOperation(t, table, db) {
 }
 
 function testWithTable(name, f) {
-  const db = new Dexie(name)
-  db.version(1).stores({ test: '++' })
-  db.test.bulkAdd(testEntries)
-    .then(_ => test(name, t => {
-      return f(t, db.test)
-        .then(_ => db.delete())
-        .catch(err => {
-          db.delete()
-          throw err
-        })
-    }))
+  Dexie.delete(name)
+    .then(_ => {
+      const db = new Dexie(name)
+      db.version(1).stores({ test: '++' })
+      return db.test.bulkAdd(testEntries)
+        .then(_ => db.test)
+    })
+    .then(table => test(name, t => f(t, table)))
 }
