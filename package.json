@@ -1,6 +1,6 @@
 {
   "name": "dexie-batch",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Fetch DB entries in batches to improve performance while respecting IPC size constraints",
   "main": "dexie-batch.js",
   "scripts": {
