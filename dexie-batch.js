@@ -5,6 +5,10 @@ module.exports = class DexieBatch {
     this.opts = opts
   }
 
+  isParallel() {
+    return !!this.opts.limit
+  }
+
   each(collection, callback) {
     return this.eachBatch(collection, a => {
       return Promise.all(a.map(callback))
@@ -12,7 +16,7 @@ module.exports = class DexieBatch {
   }
 
   eachBatch(collection, callback) {
-    const delegate = this.opts.limit ? 'eachBatchParallel' : 'eachBatchSerial'
+    const delegate = this.isParallel() ? 'eachBatchParallel' : 'eachBatchSerial'
     return this[delegate](collection, callback)
   }
 
