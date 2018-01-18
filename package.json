@@ -4,7 +4,7 @@
   "description": "Fetch DB entries in batches to improve performance while respecting IPC size constraints",
   "main": "dexie-batch.js",
   "scripts": {
-    "format": "prettier --no-semi --single-quote --trailing-comma es5 --write '*.js'",
+    "format": "prettier --write '*.js'",
     "coverage": "istanbul cover --report html -x spec.js spec.js | tap-spec",
     "test": "node spec.js | tap-spec"
   },
@@ -33,7 +33,7 @@
     "dexie": "^1.5.1",
     "fake-indexeddb": "^2.0.3",
     "istanbul": "^0.4.5",
-    "prettier": "^1.5.3",
+    "prettier": "^1.10.2",
     "tap-spec": "^4.1.1"
   }
 }
