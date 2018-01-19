@@ -26,11 +26,11 @@
   },
   "homepage": "https://github.com/raphinesse/dexie-batch#readme",
   "peerDependencies": {
-    "dexie": "^1.3.6"
+    "dexie": ">1.3.6"
   },
   "devDependencies": {
     "blue-tape": "^1.0.0",
-    "dexie": "^1.5.1",
+    "dexie": "^2.0.1",
     "fake-indexeddb": "^2.0.3",
     "istanbul": "^0.4.5",
     "prettier": "^1.10.2",
