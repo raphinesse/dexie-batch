@@ -35,12 +35,14 @@ function testBasicOperation(t, table, db) {
 }
 
 function testWithTable(name, f) {
-  Dexie.delete(name)
-    .then(_ => {
-      const db = new Dexie(name)
-      db.version(1).stores({ test: '++' })
-      return db.test.bulkAdd(testEntries)
-        .then(_ => db.test)
-    })
-    .then(table => test(name, t => f(t, table)))
+  test(name, t =>
+    Dexie.delete(name)
+      .then(_ => {
+        const db = new Dexie(name)
+        db.version(1).stores({ test: '++' })
+        return db.test.bulkAdd(testEntries)
+          .then(_ => db.test)
+      })
+      .then(table => f(t, table))
+  )
 }
