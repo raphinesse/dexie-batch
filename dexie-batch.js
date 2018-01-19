@@ -10,8 +10,9 @@ module.exports = class DexieBatch {
   }
 
   each(collection, callback) {
-    return this.eachBatch(collection, batch => {
-      return Promise.all(batch.map(callback))
+    return this.eachBatch(collection, (batch, batchIdx) => {
+      const baseIdx = batchIdx * this.opts.batchSize
+      return Promise.all(batch.map((item, i) => callback(item, baseIdx + i)))
     })
   }
 
@@ -36,7 +37,7 @@ module.exports = class DexieBatch {
     return Promise.all(batchPromises).then(batches => batches.length)
   }
 
-  eachBatchSerial(collection, callback) {
+  eachBatchSerial(collection, callback, batchIdx = 0) {
     const batchSize = this.opts.batchSize
     return collection
       .clone()
@@ -45,10 +46,11 @@ module.exports = class DexieBatch {
       .then(batch => {
         if (!batch.length) return 0
 
-        const userPromise = callback(batch)
-        const nextBatchesPromise = this.eachBatch(
+        const userPromise = callback(batch, batchIdx)
+        const nextBatchesPromise = this.eachBatchSerial(
           collection.clone().offset(batchSize),
-          callback
+          callback,
+          batchIdx + 1
         )
 
         return Promise.all([userPromise, nextBatchesPromise]).then(
