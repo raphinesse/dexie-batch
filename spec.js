@@ -17,14 +17,12 @@ testBasicOperation(parallelBatchDriver)
 
 function testBasicOperation(batchDriver) {
   const mode = batchDriver.isParallel() ? 'parallel' : 'serial'
-  testWithCollection(`basic ${mode} operation`, (t, collection) => {
-    let maxIdx = -1
+  testWithCollection(`${mode} driver: basic operation`, (t, collection) => {
     const entries = []
 
     return batchDriver
       .each(collection, (entry, i) => {
         entries.push(entry)
-        maxIdx = Math.max(maxIdx, i)
       })
       .then(_ => {
         // parallel batch driver may yield batches out of order
@@ -32,8 +30,32 @@ function testBasicOperation(batchDriver) {
           entries.sort((a, b) => a - b)
         }
 
-        t.equal(maxIdx + 1, batchSize, 'batches sized correctly')
         t.deepEqual(entries, testEntries, 'entries read correctly')
+      })
+  })
+}
+
+testBatchProperties(serialBatchDriver)
+testBatchProperties(parallelBatchDriver)
+
+function testBatchProperties(batchDriver) {
+  const mode = batchDriver.isParallel() ? 'parallel' : 'serial'
+  testWithCollection(`${mode} driver: batch properties`, (t, collection) => {
+    let batchSizes = new Set()
+
+    return batchDriver
+      .eachBatch(collection, batch => {
+        batchSizes.add(batch.length)
+      })
+      .then(_ => {
+        batchSizes = Array.from(batchSizes.values())
+        // parallel batch driver may yield batches out of order
+        if (batchDriver.isParallel()) {
+          batchSizes.sort((a, b) => b - a)
+        }
+
+        t.equal(batchSizes[0], batchSize, 'correct batch size')
+        t.equal(batchSizes.length, 2, 'only last batch size different')
       })
   })
 }

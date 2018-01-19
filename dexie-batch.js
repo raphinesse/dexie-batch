@@ -43,10 +43,9 @@ module.exports = class DexieBatch {
       .limit(batchSize)
       .toArray()
       .then(batch => {
+        if (!batch.length) return
         callback(batch)
-        return batch.length
-          ? this.eachBatch(collection.clone().offset(batchSize), callback)
-          : undefined
+        return this.eachBatch(collection.clone().offset(batchSize), callback)
       })
   }
 }
