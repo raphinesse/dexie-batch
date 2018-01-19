@@ -7,6 +7,7 @@ const DexieBatch = require('./dexie-batch')
 
 const numEntries = 42
 const batchSize = 10
+const expectedBatchCount = 5
 const testEntries = Array.from(Array(numEntries), (_, i) => i)
 
 const serialBatchDriver = new DexieBatch({ batchSize })
@@ -26,7 +27,7 @@ function testBasicOperation(batchDriver) {
         entries.push(entry)
         return new Promise(r => setTimeout(r, 10)).then(_ => resolvedCount++)
       })
-      .then(_ => {
+      .then(batchCount => {
         // parallel batch driver may yield batches out of order
         if (batchDriver.isParallel()) {
           entries.sort((a, b) => a - b)
@@ -34,6 +35,7 @@ function testBasicOperation(batchDriver) {
 
         t.deepEqual(entries, testEntries, 'entries read correctly')
         t.equal(resolvedCount, numEntries, 'waited for user promises')
+        t.equal(batchCount, expectedBatchCount, 'correct batch count')
       })
   })
 }

@@ -43,7 +43,7 @@ module.exports = class DexieBatch {
       .limit(batchSize)
       .toArray()
       .then(batch => {
-        if (!batch.length) return
+        if (!batch.length) return 0
 
         const userPromise = callback(batch)
         const nextBatchesPromise = this.eachBatch(
@@ -51,7 +51,9 @@ module.exports = class DexieBatch {
           callback
         )
 
-        return Promise.all([userPromise, nextBatchesPromise])
+        return Promise.all([userPromise, nextBatchesPromise]).then(
+          ([, batchCount]) => batchCount + 1
+        )
       })
   }
 }
