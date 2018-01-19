@@ -27,7 +27,11 @@ function testBasicOperation(batchDriver) {
         maxIdx = Math.max(maxIdx, i)
       })
       .then(_ => {
-        entries.sort((a, b) => a - b)
+        // parallel batch driver may yield batches out of order
+        if (batchDriver.isParallel()) {
+          entries.sort((a, b) => a - b)
+        }
+
         t.equal(maxIdx + 1, batchSize, 'batches sized correctly')
         t.deepEqual(entries, testEntries, 'entries read correctly')
       })
