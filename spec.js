@@ -5,6 +5,7 @@ const test = require('blue-tape')
 const Dexie = require('dexie')
 const DexieBatch = require('./dexie-batch')
 
+const noop = _ => {}
 const numEntries = 42
 const batchSize = 10
 const expectedBatchCount = 5
@@ -68,6 +69,39 @@ function testBatchProperties(batchDriver) {
       })
   })
 }
+
+test('constructor argument checking', t => {
+  t.throws(_ => new DexieBatch(), /batchSize/)
+  t.throws(_ => new DexieBatch(null), /batchSize/)
+  t.throws(_ => new DexieBatch(1), /batchSize/)
+  t.throws(_ => new DexieBatch('foo'), /batchSize/)
+  t.throws(_ => new DexieBatch({}), /batchSize/)
+  t.throws(_ => new DexieBatch({ batchSize: 0 }), /batchSize/)
+
+  t.throws(_ => new DexieBatch({ batchSize, limit: -1 }), /limit/)
+  t.end()
+})
+
+testWithCollection('method argument checking', (t, collection) => {
+  const driver = parallelBatchDriver
+  ;['each', 'eachBatch', 'eachBatchParallel', 'eachBatchSerial']
+    .map(method => driver[method].bind(driver))
+    .forEach(method => {
+      t.throws(_ => method(), /mandatory/)
+
+      t.throws(_ => method(null, noop), /Collection/)
+      t.throws(_ => method(1, noop), /Collection/)
+      t.throws(_ => method([1, 2], noop), /Collection/)
+
+      t.throws(_ => method(collection), /mandatory/)
+      t.throws(_ => method(collection, null), /function/)
+      t.throws(_ => method(collection, 1), /function/)
+    })
+})
+
+testWithCollection('no limit, no parallel operation', (t, collection) => {
+  t.throws(_ => serialBatchDriver.eachBatchParallel(collection, noop), /limit/)
+})
 
 function testWithCollection(name, f) {
   test(name, t =>
