@@ -44,8 +44,14 @@ module.exports = class DexieBatch {
       .toArray()
       .then(batch => {
         if (!batch.length) return
-        callback(batch)
-        return this.eachBatch(collection.clone().offset(batchSize), callback)
+
+        const userPromise = callback(batch)
+        const nextBatchesPromise = this.eachBatch(
+          collection.clone().offset(batchSize),
+          callback
+        )
+
+        return Promise.all([userPromise, nextBatchesPromise])
       })
   }
 }

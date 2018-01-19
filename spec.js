@@ -19,10 +19,12 @@ function testBasicOperation(batchDriver) {
   const mode = batchDriver.isParallel() ? 'parallel' : 'serial'
   testWithCollection(`${mode} driver: basic operation`, (t, collection) => {
     const entries = []
+    let resolvedCount = 0
 
     return batchDriver
       .each(collection, (entry, i) => {
         entries.push(entry)
+        return new Promise(r => setTimeout(r, 10)).then(_ => resolvedCount++)
       })
       .then(_ => {
         // parallel batch driver may yield batches out of order
@@ -31,6 +33,7 @@ function testBasicOperation(batchDriver) {
         }
 
         t.deepEqual(entries, testEntries, 'entries read correctly')
+        t.equal(resolvedCount, numEntries, 'waited for user promises')
       })
   })
 }
