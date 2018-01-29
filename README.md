@@ -11,7 +11,7 @@ npm i dexie-batch
 ## Usage
 
 ```js
-import DexieBatch from 'dexie'
+import DexieBatch from 'dexie-batch'
 import table from './my-awesome-dexie-table'
 
 const collection = table.toCollection()
