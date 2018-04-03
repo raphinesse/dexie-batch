@@ -1,5 +1,3 @@
-const Promise = require('dexie').Promise
-
 module.exports = class DexieBatch {
   constructor(opts) {
     assertValidOptions(opts)
