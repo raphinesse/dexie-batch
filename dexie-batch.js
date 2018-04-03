@@ -1,4 +1,4 @@
-module.exports = class DexieBatch {
+window.DexieBatch = class DexieBatch {
   constructor(opts) {
     assertValidOptions(opts)
     this.opts = opts
