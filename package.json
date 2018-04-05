@@ -4,10 +4,13 @@
   "description": "Fetch DB entries in batches to improve performance while respecting IPC size constraints",
   "license": "MIT",
   "author": "Raphael von der Grün",
-  "main": "dexie-batch.js",
+  "main": "dist/dexie-batch.js",
+  "module": "dist/dexie-batch.mjs",
   "repository": "raphinesse/dexie-batch",
   "scripts": {
+    "build": "rollup -c",
     "format": "prettier --ignore-path .gitignore --write '**/*.js'",
+    "prepublishOnly": "npm run build",
     "test": "xo && nyc ava"
   },
   "xo": {
@@ -20,11 +23,17 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "ava": "^0.25.0",
     "dexie": "^2.0.1",
     "fake-indexeddb": "^2.0.3",
     "nyc": "^11.6.0",
+    "rollup": "^0.57.1",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "xo": "^0.20.3"
   },
   "peerDependencies": {
