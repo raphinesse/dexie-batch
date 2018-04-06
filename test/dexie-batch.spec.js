@@ -1,9 +1,9 @@
 // Fake IndexedDB in global scope
 require('fake-indexeddb/build/global')
 
-const test = require('blue-tape')
+const test = require('ava')
 const Dexie = require('dexie')
-const DexieBatch = require('./dexie-batch')
+const DexieBatch = require('../dexie-batch')
 
 const noop = _ => {}
 const numEntries = 42
@@ -39,8 +39,8 @@ function testBasicOperation(batchDriver) {
         }
 
         t.deepEqual(entries, testEntries, 'entries read correctly')
-        t.equal(resolvedCount, numEntries, 'waited for user promises')
-        t.equal(batchCount, expectedBatchCount, 'correct batch count')
+        t.is(resolvedCount, numEntries, 'waited for user promises')
+        t.is(batchCount, expectedBatchCount, 'correct batch count')
       })
   })
 }
@@ -64,8 +64,8 @@ function testBatchProperties(batchDriver) {
           batchSizes.sort((a, b) => b - a)
         }
 
-        t.equal(batchSizes[0], batchSize, 'correct batch size')
-        t.equal(batchSizes.length, 2, 'only last batch size different')
+        t.is(batchSizes[0], batchSize, 'correct batch size')
+        t.is(batchSizes.length, 2, 'only last batch size different')
       })
   })
 }
@@ -79,7 +79,6 @@ test('constructor argument checking', t => {
   t.throws(_ => new DexieBatch({ batchSize: 0 }), /batchSize/)
 
   t.throws(_ => new DexieBatch({ batchSize, limit: -1 }), /limit/)
-  t.end()
 })
 
 testWithCollection('method argument checking', (t, collection) => {
