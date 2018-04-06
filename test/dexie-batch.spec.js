@@ -4,7 +4,7 @@ require('fake-indexeddb/build/global')
 
 const test = require('ava')
 const Dexie = require('dexie')
-const DexieBatch = require('../dexie-batch')
+const DexieBatch = require('./helpers/dexie-batch')
 
 const noop = _ => {}
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))

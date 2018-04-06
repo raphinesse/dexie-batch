@@ -8,10 +8,13 @@
   "module": "dist/dexie-batch.mjs",
   "repository": "raphinesse/dexie-batch",
   "scripts": {
+    "prebuild": "npm test",
     "build": "npm run bundle && npm run minify",
     "bundle": "rollup -c",
+    "postbundle": "TEST_SUBJECT=dist/dexie-batch.js ava",
     "format": "prettier --ignore-path .gitignore --write '**/*.js'",
     "minify": "cujs dist/dexie-batch.js",
+    "postminify": "TEST_SUBJECT=dist/dexie-batch.min.js ava",
     "prepublishOnly": "npm run build",
     "test": "xo && nyc ava"
   },
