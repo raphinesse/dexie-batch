@@ -8,8 +8,10 @@
   "module": "dist/dexie-batch.mjs",
   "repository": "raphinesse/dexie-batch",
   "scripts": {
-    "build": "rollup -c",
+    "build": "npm run bundle && npm run minify",
+    "bundle": "rollup -c",
     "format": "prettier --ignore-path .gitignore --write '**/*.js'",
+    "minify": "cujs dist/dexie-batch.js",
     "prepublishOnly": "npm run build",
     "test": "xo && nyc ava"
   },
@@ -31,6 +33,7 @@
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
+    "cujs": "^0.2.0",
     "dexie": "^2.0.1",
     "fake-indexeddb": "^2.0.3",
     "nyc": "^11.6.0",
@@ -38,6 +41,7 @@
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-resolve": "^3.3.0",
+    "uglify-es": "^3.3.9",
     "xo": "^0.20.3"
   },
   "peerDependencies": {
