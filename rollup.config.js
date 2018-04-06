@@ -1,5 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
+import babel from 'rollup-plugin-babel'
 
 const pkg = require('./package')
 
@@ -18,6 +19,12 @@ function outputConfig(config) {
   return Object.assign(defaultConfig, config)
 }
 
+const babelConfig = {
+  exclude: 'node_modules/**',
+  presets: [['env', { modules: false, targets: { browsers: 'defaults' } }]],
+  plugins: ['external-helpers'],
+}
+
 export default {
   input: 'dexie-batch.js',
   output: [
@@ -32,5 +39,5 @@ export default {
     outputConfig({ file: pkg.module, format: 'es' }),
   ],
   external: ['dexie'],
-  plugins: [resolve(), commonjs()],
+  plugins: [resolve(), commonjs(), babel(babelConfig)],
 }
