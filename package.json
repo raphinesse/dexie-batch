@@ -2,31 +2,14 @@
   "name": "dexie-batch",
   "version": "0.3.1",
   "description": "Fetch DB entries in batches to improve performance while respecting IPC size constraints",
+  "license": "MIT",
+  "author": "Raphael von der Grün",
   "main": "dexie-batch.js",
+  "repository": "raphinesse/dexie-batch",
   "scripts": {
     "format": "prettier --write '*.js'",
     "coverage": "istanbul cover --report html -x spec.js spec.js | tap-spec",
     "test": "node spec.js | tap-spec"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/raphinesse/dexie-batch.git"
-  },
-  "keywords": [
-    "dexie",
-    "get",
-    "fetch",
-    "batch",
-    "bulk"
-  ],
-  "author": "Raphael von der Grün",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/raphinesse/dexie-batch/issues"
-  },
-  "homepage": "https://github.com/raphinesse/dexie-batch#readme",
-  "peerDependencies": {
-    "dexie": ">1.3.6"
   },
   "devDependencies": {
     "blue-tape": "^1.0.0",
@@ -35,5 +18,15 @@
     "istanbul": "^0.4.5",
     "prettier": "^1.10.2",
     "tap-spec": "^4.1.1"
-  }
+  },
+  "peerDependencies": {
+    "dexie": ">1.3.6"
+  },
+  "keywords": [
+    "batch",
+    "bulk",
+    "dexie",
+    "fetch",
+    "get"
+  ]
 }
