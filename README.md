@@ -4,9 +4,16 @@ Fetch IndexedDB entries in batches to improve performance while avoiding errors 
 
 ## Installation
 
+If you are using some kind of module bundler:
 ```shell
 npm i dexie-batch
 ```
+
+Alternatively, you can use one of the [pre-built scripts](https://unpkg.com/dexie-batch/dist/) and include it *after* the script for `Dexie`:
+```html
+<script src="https://unpkg.com/dexie-batch/dist/dexie-batch.min.js"></script>
+```
+This way, `DexieBatch` will be available as a global variable.
 
 ## Usage
 
