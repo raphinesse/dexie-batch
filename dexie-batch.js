@@ -7,7 +7,7 @@ module.exports = class DexieBatch {
   }
 
   isParallel() {
-    return !!this.opts.limit
+    return Boolean(this.opts.limit)
   }
 
   each(collection, callback) {
@@ -29,7 +29,7 @@ module.exports = class DexieBatch {
   eachBatchParallel(collection, callback) {
     assertValidMethodArgs(...arguments)
     if (!this.opts.limit) {
-      throw Error('Option "limit" must be set for parallel operation')
+      throw new Error('Option "limit" must be set for parallel operation')
     }
 
     const batchSize = this.opts.batchSize
@@ -56,7 +56,7 @@ module.exports = class DexieBatch {
       .limit(batchSize)
       .toArray()
       .then(batch => {
-        if (!batch.length) return 0
+        if (batch.length === 0) return 0
 
         const userPromise = callback(batch, batchIdx)
         const nextBatchesPromise = this.eachBatchSerial(
@@ -75,23 +75,23 @@ module.exports = class DexieBatch {
 function assertValidOptions(opts) {
   const batchSize = opts && opts.batchSize
   if (!(batchSize && Number.isInteger(batchSize) && batchSize > 0)) {
-    throw Error('Mandatory option "batchSize" must be a positive integer')
+    throw new Error('Mandatory option "batchSize" must be a positive integer')
   }
 
   if ('limit' in opts && !(Number.isInteger(opts.limit) && opts.limit >= 0)) {
-    throw Error('Option "limit" must be a non-negative integer')
+    throw new Error('Option "limit" must be a non-negative integer')
   }
 }
 
 function assertValidMethodArgs(collection, callback) {
   if (arguments.length < 2) {
-    throw Error('Arguments "collection" and "callback" are mandatory')
+    throw new Error('Arguments "collection" and "callback" are mandatory')
   }
   if (!isCollectionInstance(collection)) {
-    throw Error('"collection" must be of type Collection')
+    throw new Error('"collection" must be of type Collection')
   }
   if (!(typeof callback === 'function')) {
-    throw Error('"callback" must be a function')
+    throw new TypeError('"callback" must be a function')
   }
 }
 

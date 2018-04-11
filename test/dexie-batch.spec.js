@@ -1,4 +1,5 @@
 // Fake IndexedDB in global scope
+// eslint-disable-next-line import/no-unassigned-import
 require('fake-indexeddb/build/global')
 
 const test = require('ava')
@@ -6,10 +7,12 @@ const Dexie = require('dexie')
 const DexieBatch = require('../dexie-batch')
 
 const noop = _ => {}
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const numEntries = 42
 const batchSize = 10
 const expectedBatchCount = 5
-const testEntries = Array.from(Array(numEntries), (_, i) => i)
+const testEntries = Array.from(new Array(numEntries), (_, i) => i)
 
 const serialBatchDriver = new DexieBatch({ batchSize })
 const parallelBatchDriver = new DexieBatch({ batchSize, limit: numEntries })
@@ -28,12 +31,12 @@ function testBasicOperation(batchDriver) {
       .each(collection, (entry, i) => {
         entries.push(entry)
         indices.push(i)
-        return new Promise(r => setTimeout(r, 10)).then(_ => resolvedCount++)
+        return delay(10).then(_ => resolvedCount++)
       })
       .then(batchCount => {
         t.deepEqual(indices, entries, 'indices calculated correctly')
 
-        // parallel batch driver may yield batches out of order
+        // Parallel batch driver may yield batches out of order
         if (batchDriver.isParallel()) {
           entries.sort((a, b) => a - b)
         }
@@ -59,7 +62,7 @@ function testBatchProperties(batchDriver) {
       })
       .then(_ => {
         batchSizes = Array.from(batchSizes.values())
-        // parallel batch driver may yield batches out of order
+        // Parallel batch driver may yield batches out of order
         if (batchDriver.isParallel()) {
           batchSizes.sort((a, b) => b - a)
         }
@@ -103,13 +106,11 @@ testWithCollection('no limit, no parallel operation', (t, collection) => {
 })
 
 function testWithCollection(name, f) {
-  test(name, t =>
-    Dexie.delete(name).then(_ => {
-      const db = new Dexie(name)
-      db.version(1).stores({ test: '++' })
-      return db.test
-        .bulkAdd(testEntries)
-        .then(_ => f(t, db.test.toCollection()))
-    })
-  )
+  test(name, async t => {
+    await Dexie.delete(name)
+    const db = new Dexie(name)
+    db.version(1).stores({ test: '++' })
+    await db.test.bulkAdd(testEntries)
+    await f(t, db.test.toCollection())
+  })
 }
