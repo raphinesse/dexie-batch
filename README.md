@@ -1,4 +1,4 @@
-# `dexie-batch`
+# dexie-batch [![Build Status](https://travis-ci.org/raphinesse/dexie-batch.svg?branch=master)](https://travis-ci.org/raphinesse/dexie-batch)
 
 Fetch IndexedDB entries in batches to improve performance while avoiding errors like *Maximum IPC message size exceeded*.
 
