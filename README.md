@@ -47,6 +47,6 @@ The returned `Dexie.Promise` resolves when all batch operations have finished. I
 
 The `batchSize` option is mandatory since a sensible value depends strongly on the individual record size.
 
-Batches are requested in parallel iff `limit` option is present.
+Batches are requested in parallel if `limit` option is present.
 Otherwise we would not know when to stop sending requests.
 When no limit is given, batches are requested serially until one request gives an empty result.
