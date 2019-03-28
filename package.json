@@ -1,6 +1,6 @@
 {
   "name": "dexie-batch",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Fetch DB entries in batches to improve performance while respecting IPC size constraints",
   "license": "MIT",
   "author": "Raphael von der Grün",
