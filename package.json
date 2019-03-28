@@ -32,14 +32,14 @@
     "dist"
   ],
   "devDependencies": {
-    "ava": "^0.25.0",
+    "ava": "^1.4.1",
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
-    "cujs": "^0.2.0",
-    "dexie": "^2.0.1",
+    "cujs": "^0.2.1",
+    "dexie": "^2.0.4",
     "fake-indexeddb": "^2.1.0",
-    "nyc": "^11.6.0",
+    "nyc": "^13.3.0",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^9.1.0",
