@@ -21,8 +21,7 @@ function outputConfig(config) {
 
 const babelConfig = {
   exclude: 'node_modules/**',
-  presets: [['env', { modules: false, targets: { browsers: 'defaults' } }]],
-  plugins: ['external-helpers'],
+  presets: [['@babel/env', { targets: { browsers: 'defaults' } }]],
 }
 
 export default {
