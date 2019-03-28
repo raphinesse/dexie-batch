@@ -1,4 +1,6 @@
-const Promise = require('dexie').Promise
+/* eslint-disable prefer-rest-params */
+
+const { Promise } = require('dexie')
 
 module.exports = class DexieBatch {
   constructor(opts) {
@@ -32,7 +34,7 @@ module.exports = class DexieBatch {
       throw new Error('Option "limit" must be set for parallel operation')
     }
 
-    const batchSize = this.opts.batchSize
+    const { batchSize } = this.opts
     const batchPromises = []
 
     for (let batchIdx = 0; batchIdx * batchSize < this.opts.limit; batchIdx++) {
@@ -44,13 +46,14 @@ module.exports = class DexieBatch {
         .then(batch => callback(batch, batchIdx))
       batchPromises.push(batchPromise)
     }
+
     return Promise.all(batchPromises).then(batches => batches.length)
   }
 
   eachBatchSerial(collection, callback, batchIdx = 0) {
     assertValidMethodArgs(...arguments)
 
-    const batchSize = this.opts.batchSize
+    const { batchSize } = this.opts
     return collection
       .clone()
       .limit(batchSize)
@@ -87,9 +90,11 @@ function assertValidMethodArgs(collection, callback) {
   if (arguments.length < 2) {
     throw new Error('Arguments "collection" and "callback" are mandatory')
   }
+
   if (!isCollectionInstance(collection)) {
     throw new Error('"collection" must be of type Collection')
   }
+
   if (!(typeof callback === 'function')) {
     throw new TypeError('"callback" must be a function')
   }

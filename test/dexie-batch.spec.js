@@ -12,7 +12,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const numEntries = 42
 const batchSize = 10
 const expectedBatchCount = 5
-const testEntries = Array.from(new Array(numEntries), (_, i) => i)
+const testEntries = [...new Array(numEntries)].map((_, i) => i)
 
 const serialBatchDriver = new DexieBatch({ batchSize })
 const parallelBatchDriver = new DexieBatch({ batchSize, limit: numEntries })
@@ -61,7 +61,7 @@ function testBatchProperties(batchDriver) {
         batchSizes.add(batch.length)
       })
       .then(_ => {
-        batchSizes = Array.from(batchSizes.values())
+        batchSizes = [...batchSizes.values()]
         // Parallel batch driver may yield batches out of order
         if (batchDriver.isParallel()) {
           batchSizes.sort((a, b) => b - a)
