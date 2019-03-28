@@ -1,6 +1,6 @@
 // Fake IndexedDB in global scope
 // eslint-disable-next-line import/no-unassigned-import
-require('fake-indexeddb/build/global')
+require('fake-indexeddb/auto')
 
 const test = require('ava')
 const Dexie = require('dexie')

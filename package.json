@@ -38,7 +38,7 @@
     "babel-preset-env": "^1.6.1",
     "cujs": "^0.2.0",
     "dexie": "^2.0.1",
-    "fake-indexeddb": "^2.0.3",
+    "fake-indexeddb": "^2.1.0",
     "nyc": "^11.6.0",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
