@@ -1,5 +1,4 @@
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
+import typescript from '@rollup/plugin-typescript'
 import babel from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 
@@ -26,16 +25,23 @@ function umdConfig(config) {
 }
 
 const babelConfig = {
+  extensions: ['.js', '.ts'],
   babelHelpers: 'bundled',
   exclude: 'node_modules/**',
   presets: [['@babel/env', { targets: { browsers: 'defaults' } }]],
 }
 
+const tsOptions = {
+  module: 'ESNext',
+  exclude: 'test/**',
+}
+
 export default {
-  input: 'dexie-batch.js',
+  input: 'dexie-batch.ts',
   output: [
     // Browser-friendly UMD build
-    umdConfig({ file: pkg.main }),
+    // We need to use `dir` so declaration files are generated
+    umdConfig({ dir: 'dist' }),
     umdConfig({
       file: pkg.main.replace(/\.js$/, '.min.js'),
       plugins: [terser()],
@@ -44,5 +50,5 @@ export default {
     outputConfig({ file: pkg.module, format: 'es' }),
   ],
   external: ['dexie'],
-  plugins: [resolve(), commonjs(), babel(babelConfig)],
+  plugins: [typescript(tsOptions), babel(babelConfig)],
 }
