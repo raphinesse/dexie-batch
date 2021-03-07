@@ -111,7 +111,7 @@ function assertValidMethodArgs<T, Key>(collection: Dexie.Collection<T, Key>, cal
 // We would need the Dexie instance that created the collection to get the
 // Collection constructor and do some proper type checking.
 // So for now we resort to duck typing
-function isCollectionInstance(obj: any): obj is Dexie.Collection<any, any> {
+function isCollectionInstance(obj: any): boolean {
   if (!obj) return false
   return ['clone', 'offset', 'limit', 'toArray'].every(
     name => typeof obj[name] === 'function'
