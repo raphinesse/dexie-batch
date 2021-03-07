@@ -19,7 +19,7 @@ export default class DexieBatch {
     return Boolean(this.opts.limit)
   }
 
-  each<T extends Array<any>, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
+  each<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T>): Dexie.Promise<number> {
     assertValidMethodArgs(...arguments)
 
     return this.eachBatch(collection, (batch, batchIdx) => {
@@ -28,7 +28,7 @@ export default class DexieBatch {
     })
   }
 
-  eachBatch<T extends Array<any>, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
+  eachBatch<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
     assertValidMethodArgs(...arguments)
 
     return this.isParallel()
@@ -36,7 +36,7 @@ export default class DexieBatch {
       : this.eachBatchSerial(collection, callback)
   }
 
-  eachBatchParallel<T extends Array<any>, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
+  eachBatchParallel<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
     assertValidMethodArgs(...arguments)
     if (!this.opts.limit) {
       throw new Error('Option "limit" must be set for parallel operation')
