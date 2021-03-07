@@ -15,7 +15,7 @@ export interface Options {
 export type Callback<T> = (item: T, index: number) => void;
 
 export default class DexieBatch {
-  opts: Options;
+  private readonly opts: Options;
 
   constructor(opts: Options) {
     assertValidOptions(opts)
