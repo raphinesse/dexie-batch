@@ -1,5 +1,12 @@
 import { Dexie } from 'dexie'
 
+// Alias Dexie.Promise type & ctor to avoid accidental usage of vanilla Promise
+import Promise = Dexie.Promise
+const Promise = Dexie.Promise
+
+// Alias for Dexie.Collection w/ unknown Key (since we never use any)
+type Collection<T> = Dexie.Collection<T, unknown>
+
 export interface Options {
   batchSize: number;
   limit?: number;
@@ -19,16 +26,16 @@ export default class DexieBatch {
     return Boolean(this.opts.limit)
   }
 
-  each<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T>): Dexie.Promise<number> {
+  each<T>(collection: Collection<T>, callback: Callback<T>): Promise<number> {
     assertValidMethodArgs(...arguments)
 
     return this.eachBatch(collection, (batch, batchIdx) => {
       const baseIdx = batchIdx * this.opts.batchSize
-      return Dexie.Promise.all(batch.map((item, i) => callback(item, baseIdx + i)))
+      return Promise.all(batch.map((item, i) => callback(item, baseIdx + i)))
     })
   }
 
-  eachBatch<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
+  eachBatch<T>(collection: Collection<T>, callback: Callback<T[]>): Promise<number> {
     assertValidMethodArgs(...arguments)
 
     return this.isParallel()
@@ -36,7 +43,7 @@ export default class DexieBatch {
       : this.eachBatchSerial(collection, callback)
   }
 
-  eachBatchParallel<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
+  eachBatchParallel<T>(collection: Collection<T>, callback: Callback<T[]>): Promise<number> {
     assertValidMethodArgs(...arguments)
     if (!this.opts.limit) {
       throw new Error('Option "limit" must be set for parallel operation')
@@ -55,10 +62,10 @@ export default class DexieBatch {
       batchPromises.push(batchPromise)
     }
 
-    return Dexie.Promise.all(batchPromises).then(batches => batches.length)
+    return Promise.all(batchPromises).then(batches => batches.length)
   }
 
-  eachBatchSerial<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>, batchIdx: number = 0): Dexie.Promise<number> {
+  eachBatchSerial<T>(collection: Collection<T>, callback: Callback<T[]>, batchIdx: number = 0): Promise<number> {
     assertValidMethodArgs(...arguments)
 
     const { batchSize } = this.opts
@@ -76,7 +83,7 @@ export default class DexieBatch {
           batchIdx + 1
         )
 
-        return Dexie.Promise.all([userPromise, nextBatchesPromise]).then(
+        return Promise.all([userPromise, nextBatchesPromise]).then(
           ([, batchCount]) => batchCount + 1
         )
       })
