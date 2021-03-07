@@ -12,7 +12,8 @@ export interface Options {
   limit?: number;
 }
 
-export type Callback<T> = (item: T, index: number) => void;
+/** If this returns a Promise, the calling method will wait on it */
+export type Callback<T> = (item: T, index: number) => unknown;
 
 export default class DexieBatch {
   private readonly opts: Options;
