@@ -20,7 +20,7 @@ export default class DexieBatch {
   }
 
   each<T extends Array<any>, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
-    assertValidMethodArgs(collection, callback)
+    assertValidMethodArgs(...arguments)
 
     return this.eachBatch(collection, (batch, batchIdx) => {
       const baseIdx = batchIdx * this.opts.batchSize
@@ -29,7 +29,7 @@ export default class DexieBatch {
   }
 
   eachBatch<T extends Array<any>, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
-    assertValidMethodArgs(collection, callback)
+    assertValidMethodArgs(...arguments)
 
     return this.isParallel()
       ? this.eachBatchParallel(collection, callback)
@@ -37,7 +37,7 @@ export default class DexieBatch {
   }
 
   eachBatchParallel<T extends Array<any>, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): Dexie.Promise<number> {
-    assertValidMethodArgs(collection, callback)
+    assertValidMethodArgs(...arguments)
     if (!this.opts.limit) {
       throw new Error('Option "limit" must be set for parallel operation')
     }
@@ -59,7 +59,7 @@ export default class DexieBatch {
   }
 
   eachBatchSerial<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>, batchIdx: number = 0): Dexie.Promise<number> {
-    assertValidMethodArgs(collection, callback)
+    assertValidMethodArgs(...arguments)
 
     const { batchSize } = this.opts
     return collection
@@ -94,8 +94,8 @@ function assertValidOptions(opts: Options): void {
   }
 }
 
-function assertValidMethodArgs<T, Key>(collection: Dexie.Collection<T, Key>, callback: Callback<T[]>): void {
-  if (typeof collection === 'undefined' || typeof callback === 'undefined') {
+function assertValidMethodArgs(collection?: unknown, callback?: unknown): void {
+  if (arguments.length < 2) {
     throw new Error('Arguments "collection" and "callback" are mandatory')
   }
 
