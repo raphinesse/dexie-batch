@@ -7,12 +7,13 @@ const Dexie = require('dexie')
 const DexieBatch = require('./helpers/dexie-batch')
 
 const noop = _ => {}
+// eslint-disable-next-line no-promise-executor-return
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const numEntries = 42
 const batchSize = 10
 const expectedBatchCount = 5
-const testEntries = [...new Array(numEntries)].map((_, i) => i)
+const testEntries = Array.from({ length: numEntries }, (_, i) => i)
 
 const serialBatchDriver = new DexieBatch({ batchSize })
 const parallelBatchDriver = new DexieBatch({ batchSize, limit: numEntries })

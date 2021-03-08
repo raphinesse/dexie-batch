@@ -1,5 +1,3 @@
-/* eslint-disable prefer-rest-params */
-
 const { Promise } = require('dexie')
 
 module.exports = class DexieBatch {
