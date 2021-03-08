@@ -28,48 +28,46 @@ module.exports = class DexieBatch {
 
   eachBatchParallel(collection, callback) {
     assertValidMethodArgs(...arguments)
-    if (!this.opts.limit) {
+    const { batchSize, limit } = this.opts
+    if (!limit) {
       throw new Error('Option "limit" must be set for parallel operation')
     }
 
-    const { batchSize } = this.opts
-    const batchPromises = []
-
-    for (let batchIdx = 0; batchIdx * batchSize < this.opts.limit; batchIdx++) {
-      const batchPromise = collection
-        .clone()
-        .offset(batchIdx * batchSize)
-        .limit(batchSize)
-        .toArray()
-        .then(batch => callback(batch, batchIdx))
-      batchPromises.push(batchPromise)
-    }
+    const nextBatch = batchIterator(collection, batchSize)
+    const numBatches = Math.ceil(limit / batchSize)
+    const batchPromises = Array.from({ length: numBatches }, (_, idx) =>
+      nextBatch().then(batch => callback(batch, idx))
+    )
 
     return Promise.all(batchPromises).then(batches => batches.length)
   }
 
-  eachBatchSerial(collection, callback, batchIdx = 0) {
+  eachBatchSerial(collection, callback) {
     assertValidMethodArgs(...arguments)
 
-    const { batchSize } = this.opts
-    return collection
-      .clone()
-      .limit(batchSize)
-      .toArray()
-      .then(batch => {
-        if (batch.length === 0) return 0
+    const userPromises = []
+    const nextBatch = batchIterator(collection, this.opts.batchSize)
 
-        const userPromise = callback(batch, batchIdx)
-        const nextBatchesPromise = this.eachBatchSerial(
-          collection.clone().offset(batchSize),
-          callback,
-          batchIdx + 1
-        )
+    const nextUnlessEmpty = batch => {
+      if (batch.length === 0) return
+      userPromises.push(callback(batch, userPromises.length))
+      return nextBatch().then(nextUnlessEmpty)
+    }
 
-        return Promise.all([userPromise, nextBatchesPromise]).then(
-          ([, batchCount]) => batchCount + 1
-        )
-      })
+    return nextBatch()
+      .then(nextUnlessEmpty)
+      .then(() => Promise.all(userPromises))
+      .then(() => userPromises.length)
+  }
+}
+
+// Does not conform to JS iterator requirements
+function batchIterator(collection, batchSize) {
+  const it = collection.clone()
+  return () => {
+    const batchPromise = it.clone().limit(batchSize).toArray()
+    it.offset(batchSize)
+    return batchPromise
   }
 }
 
