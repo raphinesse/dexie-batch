@@ -1,6 +1,6 @@
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import babel from 'rollup-plugin-babel'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import babel from '@rollup/plugin-babel'
 
 const pkg = require('./package')
 
@@ -20,6 +20,7 @@ function outputConfig(config) {
 }
 
 const babelConfig = {
+  babelHelpers: 'bundled',
   exclude: 'node_modules/**',
   presets: [['@babel/env', { targets: { browsers: 'defaults' } }]],
 }
