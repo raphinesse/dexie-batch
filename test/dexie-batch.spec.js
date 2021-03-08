@@ -75,14 +75,14 @@ function testBatchProperties(batchDriver) {
 }
 
 test('constructor argument checking', t => {
-  t.throws(_ => new DexieBatch(), /batchSize/)
-  t.throws(_ => new DexieBatch(null), /batchSize/)
-  t.throws(_ => new DexieBatch(1), /batchSize/)
-  t.throws(_ => new DexieBatch('foo'), /batchSize/)
-  t.throws(_ => new DexieBatch({}), /batchSize/)
-  t.throws(_ => new DexieBatch({ batchSize: 0 }), /batchSize/)
+  t.throws(_ => new DexieBatch(), { message: /batchSize/ })
+  t.throws(_ => new DexieBatch(null), { message: /batchSize/ })
+  t.throws(_ => new DexieBatch(1), { message: /batchSize/ })
+  t.throws(_ => new DexieBatch('foo'), { message: /batchSize/ })
+  t.throws(_ => new DexieBatch({}), { message: /batchSize/ })
+  t.throws(_ => new DexieBatch({ batchSize: 0 }), { message: /batchSize/ })
 
-  t.throws(_ => new DexieBatch({ batchSize, limit: -1 }), /limit/)
+  t.throws(_ => new DexieBatch({ batchSize, limit: -1 }), { message: /limit/ })
 })
 
 testWithCollection('method argument checking', (t, collection) => {
@@ -90,20 +90,22 @@ testWithCollection('method argument checking', (t, collection) => {
   ;['each', 'eachBatch', 'eachBatchParallel', 'eachBatchSerial']
     .map(method => driver[method].bind(driver))
     .forEach(method => {
-      t.throws(_ => method(), /mandatory/)
+      t.throws(_ => method(), { message: /mandatory/ })
 
-      t.throws(_ => method(null, noop), /Collection/)
-      t.throws(_ => method(1, noop), /Collection/)
-      t.throws(_ => method([1, 2], noop), /Collection/)
+      t.throws(_ => method(null, noop), { message: /Collection/ })
+      t.throws(_ => method(1, noop), { message: /Collection/ })
+      t.throws(_ => method([1, 2], noop), { message: /Collection/ })
 
-      t.throws(_ => method(collection), /mandatory/)
-      t.throws(_ => method(collection, null), /function/)
-      t.throws(_ => method(collection, 1), /function/)
+      t.throws(_ => method(collection), { message: /mandatory/ })
+      t.throws(_ => method(collection, null), { message: /function/ })
+      t.throws(_ => method(collection, 1), { message: /function/ })
     })
 })
 
 testWithCollection('no limit, no parallel operation', (t, collection) => {
-  t.throws(_ => serialBatchDriver.eachBatchParallel(collection, noop), /limit/)
+  t.throws(_ => serialBatchDriver.eachBatchParallel(collection, noop), {
+    message: /limit/,
+  })
 })
 
 function testWithCollection(name, f) {
