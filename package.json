@@ -37,7 +37,7 @@
     "ava": "^1.4.1",
     "cujs": "^0.2.1",
     "dexie": "^2.0.4",
-    "fake-indexeddb": "^2.1.0",
+    "fake-indexeddb": "^3.1.2",
     "nyc": "^15.1.0",
     "rollup": "^1.7.4",
     "rollup-plugin-babel": "^4.3.2",
