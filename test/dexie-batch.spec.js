@@ -6,7 +6,7 @@ const test = require('ava')
 const Dexie = require('dexie')
 const DexieBatch = require('./helpers/dexie-batch')
 
-const noop = _ => {}
+const noop = () => {}
 // eslint-disable-next-line no-promise-executor-return
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -32,7 +32,7 @@ function testBasicOperation(batchDriver) {
       .each(collection, (entry, i) => {
         entries.push(entry)
         indices.push(i)
-        return delay(10).then(_ => resolvedCount++)
+        return delay(10).then(() => resolvedCount++)
       })
       .then(batchCount => {
         t.deepEqual(indices, entries, 'indices calculated correctly')
@@ -61,7 +61,7 @@ function testBatchProperties(batchDriver) {
       .eachBatch(collection, batch => {
         batchSizes.add(batch.length)
       })
-      .then(_ => {
+      .then(() => {
         batchSizes = [...batchSizes.values()]
         // Parallel batch driver may yield batches out of order
         if (batchDriver.isParallel()) {
@@ -75,14 +75,14 @@ function testBatchProperties(batchDriver) {
 }
 
 test('constructor argument checking', t => {
-  t.throws(_ => new DexieBatch(), { message: /batchSize/ })
-  t.throws(_ => new DexieBatch(null), { message: /batchSize/ })
-  t.throws(_ => new DexieBatch(1), { message: /batchSize/ })
-  t.throws(_ => new DexieBatch('foo'), { message: /batchSize/ })
-  t.throws(_ => new DexieBatch({}), { message: /batchSize/ })
-  t.throws(_ => new DexieBatch({ batchSize: 0 }), { message: /batchSize/ })
+  t.throws(() => new DexieBatch(), { message: /batchSize/ })
+  t.throws(() => new DexieBatch(null), { message: /batchSize/ })
+  t.throws(() => new DexieBatch(1), { message: /batchSize/ })
+  t.throws(() => new DexieBatch('foo'), { message: /batchSize/ })
+  t.throws(() => new DexieBatch({}), { message: /batchSize/ })
+  t.throws(() => new DexieBatch({ batchSize: 0 }), { message: /batchSize/ })
 
-  t.throws(_ => new DexieBatch({ batchSize, limit: -1 }), { message: /limit/ })
+  t.throws(() => new DexieBatch({ batchSize, limit: -1 }), { message: /limit/ })
 })
 
 testWithCollection('method argument checking', (t, collection) => {
@@ -90,20 +90,20 @@ testWithCollection('method argument checking', (t, collection) => {
   ;['each', 'eachBatch', 'eachBatchParallel', 'eachBatchSerial']
     .map(method => driver[method].bind(driver))
     .forEach(method => {
-      t.throws(_ => method(), { message: /mandatory/ })
+      t.throws(() => method(), { message: /mandatory/ })
 
-      t.throws(_ => method(null, noop), { message: /Collection/ })
-      t.throws(_ => method(1, noop), { message: /Collection/ })
-      t.throws(_ => method([1, 2], noop), { message: /Collection/ })
+      t.throws(() => method(null, noop), { message: /Collection/ })
+      t.throws(() => method(1, noop), { message: /Collection/ })
+      t.throws(() => method([1, 2], noop), { message: /Collection/ })
 
-      t.throws(_ => method(collection), { message: /mandatory/ })
-      t.throws(_ => method(collection, null), { message: /function/ })
-      t.throws(_ => method(collection, 1), { message: /function/ })
+      t.throws(() => method(collection), { message: /mandatory/ })
+      t.throws(() => method(collection, null), { message: /function/ })
+      t.throws(() => method(collection, 1), { message: /function/ })
     })
 })
 
 testWithCollection('no limit, no parallel operation', (t, collection) => {
-  t.throws(_ => serialBatchDriver.eachBatchParallel(collection, noop), {
+  t.throws(() => serialBatchDriver.eachBatchParallel(collection, noop), {
     message: /limit/,
   })
 })

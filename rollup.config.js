@@ -4,7 +4,7 @@ import babel from '@rollup/plugin-babel'
 
 const pkg = require('./package')
 
-const banner = (_ => {
+const banner = (() => {
   const id = `${pkg.name} v${pkg.version}`
   const homepage = 'github.com/' + pkg.repository
   const license = `${pkg.license} License`
