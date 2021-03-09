@@ -1,6 +1,7 @@
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import babel from 'rollup-plugin-babel'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import babel from '@rollup/plugin-babel'
+import typescript from '@rollup/plugin-typescript'
 
 const pkg = require('./package')
 
@@ -25,7 +26,7 @@ const babelConfig = {
 }
 
 export default {
-  input: 'dexie-batch.js',
+  input: 'dexie-batch.ts',
   output: [
     // Browser-friendly UMD build
     outputConfig({
@@ -38,5 +39,5 @@ export default {
     outputConfig({ file: pkg.module, format: 'es' }),
   ],
   external: ['dexie'],
-  plugins: [resolve(), commonjs(), babel(babelConfig)],
+  plugins: [typescript(), resolve(), commonjs(), babel(babelConfig)],
 }
