@@ -4,7 +4,6 @@ language: node_js
 node_js: lts/*
 
 # run `npm ci` instead of `npm install`
-before_install: dpkg --compare-versions `npm -v` ge 5.8 || npm i -g npm@^5.8
 install: npm ci
 
 # run `build` script instead of `test`
