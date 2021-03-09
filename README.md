@@ -23,24 +23,21 @@ import table from './my-awesome-dexie-table'
 
 const collection = table.toCollection()
 
-const batchDriverPromise = table.count()
-  .then(n => new DexieBatch({ batchSize: 25, limit: n }))
+// Will fetch 99 items in batches of size 25 when used
+const batchDriver = new DexieBatch({ batchSize: 25, limit: 99 })
 
-batchDriverPromise
-  .then(batchDriver => batchDriver.each(collection, (entry, idx) => {
-    // Process each item individually
-  }))
-  .then(n => console.log(`Finished batch operation using ${n} batches`))
+// You can check if an instance will fetch batches concurrently
+if (batchDriver.isParallel()) { // true in this case
+  console.log('Fetching batches concurrently!')
+}
 
-batchDriverPromise
-  .then(batchDriver => batchDriver.eachBatch(collection, (batch, batchIdx) => {
-    // Process each batch (array of entries) individually
-  }))
-  .then(n => console.log(`Finished batch operation using ${n} batches`))
+batchDriver.each(collection, (entry, idx) => {
+  // Process each item individually
+}).then(n => console.log(`Fetched ${n} batches`))
 
-// This will return true in this case
-batchDriverPromise
-  .then(batchDriver => batchDriver.isParallel())
+batchDriver.eachBatch(collection, (batch, batchIdx) => {
+  // Process each batch (array of entries) individually
+}).then(n => console.log(`Fetched ${n} batches`))
 ```
 
 The returned `Dexie.Promise` resolves when all batch operations have finished. If the user callback returns a `Promise` it is waited upon.
