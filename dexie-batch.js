@@ -45,19 +45,19 @@ module.exports = class DexieBatch {
   eachBatchSerial(collection, callback) {
     assertValidMethodArgs(...arguments)
 
-    const userPromises = []
+    const cbResults = []
     const nextBatch = batchIterator(collection, this.opts.batchSize)
 
     const nextUnlessEmpty = batch => {
       if (batch.length === 0) return
-      userPromises.push(callback(batch, userPromises.length))
+      cbResults.push(callback(batch, cbResults.length))
       return nextBatch().then(nextUnlessEmpty)
     }
 
     return nextBatch()
       .then(nextUnlessEmpty)
-      .then(() => Promise.all(userPromises))
-      .then(() => userPromises.length)
+      .then(() => Promise.all(cbResults))
+      .then(() => cbResults.length)
   }
 }
 
