@@ -13,20 +13,16 @@ const banner = (() => {
 })()
 
 function outputConfig(config) {
-  const defaultConfig = {
-    sourcemap: true,
-    banner,
-  }
-  return Object.assign(defaultConfig, config)
+  return { sourcemap: true, banner, ...config }
 }
 
 function umdConfig(config) {
-  const defaultConfig = {
-    name: 'DexieBatch',
+  return outputConfig({
     format: 'umd',
+    name: 'DexieBatch',
     globals: { dexie: 'Dexie' },
-  }
-  return outputConfig(Object.assign(defaultConfig, config))
+    ...config,
+  })
 }
 
 const babelConfig = {
