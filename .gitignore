@@ -2,3 +2,4 @@ node_modules/
 .source.*
 .nyc_output/
 dist/
+/dexie-batch-*.tgz
