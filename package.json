@@ -10,7 +10,7 @@
   "scripts": {
     "prebuild": "npm test",
     "build": "rollup -c",
-    "postbuild": "TEST_SUBJECT=dist/dexie-batch.js ava",
+    "postbuild": "set -e; for f in dist/*.js; do echo $f; TEST_SUBJECT=$f ava; done",
     "prepack": "npm run build",
     "test": "xo && nyc ava"
   },
